@@ -7,7 +7,8 @@ from typing import Set
 def read_examples(file: str) -> Set[str]:
     try:
         with open(file, 'r') as f:
-            return set(line.strip() for line in f)
+            return set(tuple(line.split(',')) for line in f.read().splitlines())
+            # return set(line.strip() for line in f)
     except IOError:
         raise Exception('\'{}\' does not exist'.format(file))
 

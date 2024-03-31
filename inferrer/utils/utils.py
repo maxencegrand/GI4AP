@@ -49,7 +49,7 @@ def suffix_set(s: Set[str]) -> Generator:
             yield w[i:]
 
 
-def determine_alphabet(s: Set[str]) -> Set[str]:
+def determine_alphabet(s: Set[tuple[str]]) -> Set[str]:
     """
     Calculates the alphabet (Sigma) of the target
     regular language.
@@ -66,7 +66,14 @@ def determine_alphabet(s: Set[str]) -> Set[str]:
              regular language.
     :rtype: Set[str]
     """
-    return set(''.join(s))
+    alphabet = set()
+    # print(alphabet)
+    for w in s:
+        for symbol in w:
+            alphabet.add(symbol)
+            # print(alphabet)
+    return alphabet
+    # return set(''.join(s))
 
 
 def break_strings_in_two(red: Set[str]) -> Set[Tuple[str, str]]:

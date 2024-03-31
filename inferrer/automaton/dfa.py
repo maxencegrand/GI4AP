@@ -423,7 +423,7 @@ class DFA(FSA):
 
         digraph.node('', shape='plaintext', constraint='true')
         digraph.edge('', 'q{}'.format(self._start_state.name))
-
+        print(digraph)
         return digraph
 
     def show(self):
@@ -432,7 +432,7 @@ class DFA(FSA):
         immediately be shown in a PDF file when this
         method is called.
         """
-        self.create_graphviz_object().view(tempfile.mkstemp('gv')[1], cleanup=True)
+        self.create_graphviz_object()#.view(tempfile.mkstemp('gv')[1], cleanup=True)
 
     def __hash__(self):
         return hash(str(self))
