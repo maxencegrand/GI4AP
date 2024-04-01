@@ -1,6 +1,6 @@
 from inferrer.algorithms.algorithm import Algorithm
 from typing import Set
-
+from inferrer.samples import *
 
 class PassiveLearner(Algorithm):
     """
@@ -15,7 +15,7 @@ class PassiveLearner(Algorithm):
     DFA that correctly describes the target regular language.
     """
 
-    def __init__(self, alphabet: Set[str], pos_examples: Set[str], neg_examples: Set[str]):
+    def __init__(self, alphabet: Alphabet, pos_examples: Sample, neg_examples: Sample):
         """
         :param alphabet: The alphabet (Sigma) of the target
                          regular language.

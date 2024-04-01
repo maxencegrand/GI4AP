@@ -6,7 +6,7 @@ from inferrer.automaton.state import State
 from inferrer.automaton.fsa import FSA
 from collections import defaultdict, OrderedDict, deque
 from typing import Set, Tuple, List, Generator
-
+from inferrer.samples import *
 
 
 class DFA(FSA):
@@ -14,10 +14,10 @@ class DFA(FSA):
     Implements a deterministic finite automaton.
     """
 
-    def __init__(self, alphabet: Set[str], start_state: State=State('')):
+    def __init__(self, alphabet: Alphabet, start_state: State=State('')):
         """
         :param alphabet: The alphabet of the regular language
-        :type alphabet: set
+        :type alphabet: Alphabet
         :param start_state: the initial state of the dfa
         :type start_state: State
         """
@@ -64,9 +64,13 @@ class DFA(FSA):
         :param a: letter in alphabet
         :type a: str
         """
-        if a not in self.alphabet:
+        if a not in self.alphabet.symbols:
             raise ValueError('\'{}\' is not in the alphabet of the dfa!'.format(a))
 
+        print(q1.name)
+        print(type(q1.name))
+        print(q2.name)
+        print(type(q2.name))
         self.states.update({q1, q2})
         self._transitions[q1][a] = q2
 
@@ -491,7 +495,7 @@ class DFA(FSA):
         return '\n'.join(rep)
 
 
-def build_pta(s_plus: Set[str], s_minus: Set[str]=set()) -> DFA:
+def build_pta(s_plus: Sample, s_minus: Sample=Sample(set())) -> DFA:
     """
     Function that builds a prefix tree acceptor from the example strings
     S = S+ union S-
@@ -508,28 +512,32 @@ def build_pta(s_plus: Set[str], s_minus: Set[str]=set()) -> DFA:
     alphabet = utils.determine_alphabet(samples)
     pta = DFA(alphabet)
 
-    for letter in alphabet:
-        pta.add_transition(State(''), State(letter), letter)
+    for symbol in alphabet.symbols:
+        w = Word(tuple([symbol]))
+        pta.add_transition(State(Word.empty()), State(w), symbol)
 
     states = {
+
         State(u) for u in utils.prefix_set(samples)
     }
 
     new_states = set()
     for u in states:
-        for a in alphabet:
-            ua = State(u.name + a)
+        for a in alphabet.symbols:
+            # print(46853846)
+            # print(a.__str__())
+            ua = State(u.name.add(a))
             if ua not in states:
                 new_states.add(ua)
-
+            print("%%%%%%%%%%%%%%%%%%%")
             pta.add_transition(u, ua, a)
 
     states.update(new_states)
 
     for u in states:
-        if u.name in s_plus:
+        if u.name in s_plus.words:
             pta.accept_states.add(u)
-        if u.name in s_minus:
+        if u.name in s_minus.words:
             pta.reject_states.add(u)
 
     pta.states = states

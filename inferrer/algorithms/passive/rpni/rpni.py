@@ -3,7 +3,7 @@ from inferrer import utils, automaton
 from inferrer.algorithms.passive.passive_learner import PassiveLearner
 from inferrer.logger.logger import Logger
 from typing import Set
-
+from inferrer.samples import *
 
 class RPNI(PassiveLearner):
     """
@@ -12,18 +12,18 @@ class RPNI(PassiveLearner):
     takes place and, in the best case, returns the correct target automaton.
     """
 
-    def __init__(self, pos_examples: Set[str], neg_examples: Set[str], alphabet: Set[str]):
+    def __init__(self, pos_examples: Sample, neg_examples: Sample, alphabet: Alphabet):
         """
         :param pos_examples: Set of positive example strings
                              from the target language
-        :type pos_examples: Set[str]
+        :type pos_examples: Sample
         :param neg_examples: Set of negative example strings,
                              i.e strings that do not belong in
                              the target language.
-        :type neg_examples: Set[str]
+        :type neg_examples: Sample
         :param alphabet: The alphabet (Sigma) of the target
                          regular language.
-        :type alphabet: Set[str]
+        :type alphabet: Alphabet
         """
         super().__init__(alphabet, pos_examples, neg_examples)
 

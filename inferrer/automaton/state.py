@@ -1,6 +1,8 @@
+from inferrer.samples import Word
+
 class State:
 
-    def __init__(self, name: str):
+    def __init__(self, name: Word):
         """
         Represents a State in a
         finite state acceptor.

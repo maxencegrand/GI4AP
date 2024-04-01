@@ -5,9 +5,9 @@ on sets.
 
 import itertools
 from typing import Set, Generator, Tuple
+from inferrer.samples import Alphabet, Sample, Word
 
-
-def prefix_set(s: Set[str]) -> Generator:
+def prefix_set(s: Sample) -> Generator:
     """
     Calculates the prefix set of the set s given the
     alphabet.
@@ -23,12 +23,12 @@ def prefix_set(s: Set[str]) -> Generator:
     :return: Generator with all the prefixes
     :rtype: Generator[str]
     """
-    for w in s:
-        for i in range(len(w) + 1):
-            yield w[:i]
+    for w in s.words:
+        for i in range(len(w.symbols) + 1):
+            yield Word(w.symbols[:i])
 
 
-def suffix_set(s: Set[str]) -> Generator:
+def suffix_set(s: Sample) -> Generator:
     """
     Calculates the suffix set of the set s given the
     alphabet.
@@ -44,12 +44,12 @@ def suffix_set(s: Set[str]) -> Generator:
     :return: Generator with all the suffixes
     :rtype: Generator[str]
     """
-    for w in s:
-        for i in range(len(w), -1, -1):
-            yield w[i:]
+    for w in s.words:
+        for i in range(len(w.symbols), -1, -1):
+            yield Word(w.symbols[i:])
 
 
-def determine_alphabet(s: Set[tuple[str]]) -> Set[str]:
+def determine_alphabet(s: Sample) -> Alphabet:
     """
     Calculates the alphabet (Sigma) of the target
     regular language.
@@ -68,11 +68,11 @@ def determine_alphabet(s: Set[tuple[str]]) -> Set[str]:
     """
     alphabet = set()
     # print(alphabet)
-    for w in s:
-        for symbol in w:
+    for w in s.words:
+        for symbol in w.symbols:
             alphabet.add(symbol)
             # print(alphabet)
-    return alphabet
+    return Alphabet(alphabet)
     # return set(''.join(s))
 
 

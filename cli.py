@@ -1,13 +1,18 @@
 import sys
 import argparse
 import inferrer
+from inferrer.samples import *
 from typing import Set
 
 
 def read_examples(file: str) -> Set[str]:
     try:
         with open(file, 'r') as f:
-            return set(tuple(line.split(',')) for line in f.read().splitlines())
+            words = set()
+            for line in f.read().splitlines():
+                w = Word(tuple(Symbol(s) for s in line.split(',')))
+                words.add(w)
+            return Sample(words)
             # return set(line.strip() for line in f)
     except IOError:
         raise Exception('\'{}\' does not exist'.format(file))
@@ -15,26 +20,30 @@ def read_examples(file: str) -> Set[str]:
 
 def main(args):
     pos_examples = read_examples(args.positive_examples)
+    print(pos_examples)
     neg_examples = read_examples(args.negative_examples)
+    print(neg_examples)
     alphabet = inferrer.utils.determine_alphabet(pos_examples.union(neg_examples))
+    print(alphabet)
     algorithm = args.algorithm
 
-    if algorithm in ['rpni', 'gold']:
+    if algorithm in ['rpni']:
+    # if algorithm in ['rpni', 'gold']:
         learner = inferrer.Learner(alphabet=alphabet,
                                    pos_examples=pos_examples,
                                    neg_examples=neg_examples,
                                    algorithm=algorithm)
-    elif algorithm in ['lstar', 'nlstar']:
-        learner = inferrer.Learner(alphabet=alphabet,
-                                   oracle=inferrer.oracle.PassiveOracle(pos_examples,
-                                                                        neg_examples),
-                                   algorithm=algorithm)
+    # elif algorithm in ['lstar', 'nlstar']:
+    #     learner = inferrer.Learner(alphabet=alphabet,
+    #                                oracle=inferrer.oracle.PassiveOracle(pos_examples,
+    #                                                                     neg_examples),
+    #                                algorithm=algorithm)
 
     dfa = learner.learn_grammar()
     print(dfa.to_regex())
 
-    if args.show_dfa:
-        dfa.show()
+    # if args.show_dfa:
+    #     dfa.show()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='This is the CLI tool for the '

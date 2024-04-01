@@ -1,15 +1,15 @@
 import abc
 from inferrer import automaton
 from typing import Set
-
+from inferrer.samples import Alphabet
 
 class Algorithm(abc.ABC):
 
-    def __init__(self, alphabet: Set[str]):
+    def __init__(self, alphabet: Alphabet):
         """
         :param alphabet: The alphabet (Sigma) of the target
                          regular language.
-        :type alphabet: Set[str]
+        :type alphabet: Alphabet
         """
         self._alphabet = alphabet
 

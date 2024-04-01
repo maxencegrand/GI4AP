@@ -35,4 +35,19 @@ class Sample:
         return self.words != other.words
 
     def __str__(self):
-        return self.words
+        res = "["
+        for i, w in enumerate(self.words):
+            res += w.__str__()
+            if i < len(self.words)-1:
+                res += ","
+        res += "]"
+        return res
+
+    def union(self, other):
+        return Sample(self.words.union(other.words))
+
+    def intersection(self, other):
+        return Sample(self.words.intersection(other.words))
+
+    def size(self):
+        return len(self.words)

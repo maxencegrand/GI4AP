@@ -1,7 +1,7 @@
 from inferrer import utils, automaton, algorithms
 from inferrer.oracle.oracle import Oracle
 from typing import Set
-
+from inferrer.samples import Alphabet, Sample
 
 class Learner:
     """
@@ -29,9 +29,9 @@ class Learner:
           Angluin-Style learning to the learning of an NFA.
     """
 
-    def __init__(self, alphabet: Set[str],
-                 pos_examples: Set[str]=None,
-                 neg_examples: Set[str]=None,
+    def __init__(self, alphabet: Alphabet,
+                 pos_examples: Sample=None,
+                 neg_examples: Sample=None,
                  oracle: Oracle=None,
                  algorithm: str='rpni'):
         """
@@ -56,7 +56,7 @@ class Learner:
                           nlstar
         :type algorithm: str
         """
-        if not isinstance(alphabet, set) or len(alphabet) == 0:
+        if not isinstance(alphabet, Alphabet) or alphabet.size() == 0:
             raise ValueError('The alphabet has to be a set with at least one element')
 
         self._alphabet = alphabet
@@ -73,13 +73,14 @@ class Learner:
                              'algorithms are available:\n{}'
                              .format(algorithms, '\n'.join(self._learners.keys())))
 
-        if algorithm in ['rpni', 'gold']:
-            if not isinstance(pos_examples, set):
-                raise ValueError('pos_examples should be a set')
-            if not isinstance(neg_examples, set):
-                raise ValueError('neg_examples should be a set')
+        # if algorithm in ['rpni', 'gold']:
+        if algorithm in ['rpni']:
+            if not isinstance(pos_examples, Sample):
+                raise ValueError('pos_examples should be a Sample')
+            if not isinstance(neg_examples, Sample):
+                raise ValueError('neg_examples should be a Sample')
 
-            if len(pos_examples.intersection(neg_examples)) != 0:
+            if pos_examples.intersection(neg_examples).size() != 0:
                 raise ValueError('The sets of positive and negative example '
                                  'strings should not contain the same string(s)')
 
@@ -89,9 +90,9 @@ class Learner:
 
             self._alphabet = utils.determine_alphabet(pos_examples.union(neg_examples))
 
-        elif algorithm in ['lstar', 'nlstar']:
-            if oracle is None:
-                raise ValueError('oracle can not be None for algorithm \'{}\''.format(algorithm))
+        # elif algorithm in ['lstar', 'nlstar']:
+        #     if oracle is None:
+        #         raise ValueError('oracle can not be None for algorithm \'{}\''.format(algorithm))
 
         self._algorithm = algorithm
 
